@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,104 +16,40 @@ namespace Vigenere_cipher
         public Form1()
         {
             InitializeComponent();
+            Vigenere.Alphabet = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
         }
 
-        private string alphabet = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
-
-        // Сдвиг алфовита:
-        private string shift(char letter)
+        // Подготовка строки к кодированию:
+        private string prepare(string str)
         {
-            int pos = alphabet.IndexOf(letter);
-            return alphabet.Remove(0, pos) + alphabet.Remove(pos);
-        }
+            string pattern = @"\W";
+            Regex rgx = new Regex(pattern);
 
-        // Функция кодирования:
-        private string encode(string input, string key)
-        {
-            string result = "";
-
-            while (key.Length < input.Length)
-            {
-                key += key;
-            }
-            if (key.Length > input.Length) key.Remove(input.Length);
-
-            for (int i = 0; i < input.Length; i++)
-            {
-                int pos = alphabet.IndexOf(input[i]);
-                result += shift(key[i])[pos];
-            }
-
-            return result;
-        }
-
-        // Функция декодирования:
-        private string decode(string input, string key)
-        {
-            string result = "";
-
-            while (key.Length < input.Length)
-            {
-                key += key;
-            }
-            if (key.Length > input.Length) key.Remove(input.Length);
-
-            for (int i = 0; i < input.Length; i++)
-            {
-                int pos = shift(key[i]).IndexOf(input[i]);
-                result += alphabet[pos];
-            }
-
-            return result;
-        }
-
-        // Функция поиска ключа:
-        private string findKey(string input, string output)
-        {
-            string result = "";
-
-            for (int i = 0; i < input.Length; i++)
-            {
-                string shiftedAlphabet = shift(input[i]);
-                int pos = shiftedAlphabet.IndexOf(output[i]);
-
-                result += alphabet[pos];
-            }
-
-            return result;
+            return rgx.Replace(str, String.Empty).ToLower();
         }
 
         private void encodeButton_Click(object sender, EventArgs e)
         {
-            string input = inputTextBox.Text;
-            input = input.Replace(" ", String.Empty).ToLower();
+            string input = prepare(inputTextBox.Text);
+            string key = prepare(keyTextBox.Text);
 
-            string key = keyTextBox.Text;
-            key = key.Replace(" ", String.Empty).ToLower();
-
-            outputTextBox.Text = encode(input, key);
+            outputTextBox.Text = Vigenere.Encode(input, key, false);
         }
 
         private void decodeButton_Click(object sender, EventArgs e)
         {
-            string output = outputTextBox.Text;
-            output = output.Replace(" ", String.Empty).ToLower();
+            string output = prepare(outputTextBox.Text);
+            string key = prepare(keyTextBox.Text);
 
-            string key = keyTextBox.Text;
-            key = key.Replace(" ", String.Empty).ToLower();
-
-            inputTextBox.Text = decode(output, key);
+            inputTextBox.Text = Vigenere.Encode(output, key, true);
         }
 
         private void keyButton_Click(object sender, EventArgs e)
         {
-            string input = inputTextBox.Text;
-            input = input.Replace(" ", String.Empty).ToLower();
+            string input = prepare(inputTextBox.Text);
+            string output = prepare(outputTextBox.Text);
 
-            string output = outputTextBox.Text;
-            output = output.Replace(" ", String.Empty).ToLower();
-
-            keyTextBox.Text = findKey(input, output);
+            keyTextBox.Text = Vigenere.FindKey(input, output);
         }
     }
 }
