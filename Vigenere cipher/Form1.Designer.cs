@@ -36,6 +36,7 @@
             this.keyTextBox = new System.Windows.Forms.TextBox();
             this.encodeButton = new System.Windows.Forms.Button();
             this.keyButton = new System.Windows.Forms.Button();
+            this.decodeButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // inputLabel
@@ -85,7 +86,7 @@
             // 
             this.keyTextBox.Location = new System.Drawing.Point(50, 169);
             this.keyTextBox.Name = "keyTextBox";
-            this.keyTextBox.Size = new System.Drawing.Size(166, 20);
+            this.keyTextBox.Size = new System.Drawing.Size(85, 20);
             this.keyTextBox.TabIndex = 5;
             // 
             // encodeButton
@@ -100,18 +101,30 @@
             // 
             // keyButton
             // 
-            this.keyButton.Location = new System.Drawing.Point(141, 212);
+            this.keyButton.Location = new System.Drawing.Point(141, 168);
             this.keyButton.Name = "keyButton";
             this.keyButton.Size = new System.Drawing.Size(75, 23);
             this.keyButton.TabIndex = 7;
             this.keyButton.Text = "Find key";
             this.keyButton.UseVisualStyleBackColor = true;
+            this.keyButton.Click += new System.EventHandler(this.keyButton_Click);
+            // 
+            // decodeButton
+            // 
+            this.decodeButton.Location = new System.Drawing.Point(141, 212);
+            this.decodeButton.Name = "decodeButton";
+            this.decodeButton.Size = new System.Drawing.Size(75, 23);
+            this.decodeButton.TabIndex = 8;
+            this.decodeButton.Text = "Decode";
+            this.decodeButton.UseVisualStyleBackColor = true;
+            this.decodeButton.Click += new System.EventHandler(this.decodeButton_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(232, 247);
+            this.Controls.Add(this.decodeButton);
             this.Controls.Add(this.keyButton);
             this.Controls.Add(this.encodeButton);
             this.Controls.Add(this.keyTextBox);
@@ -137,6 +150,7 @@
         private System.Windows.Forms.TextBox keyTextBox;
         private System.Windows.Forms.Button encodeButton;
         private System.Windows.Forms.Button keyButton;
+        private System.Windows.Forms.Button decodeButton;
     }
 }
 
