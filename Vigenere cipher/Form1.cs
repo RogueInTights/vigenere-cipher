@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Vigenere_cipher
@@ -22,10 +15,28 @@ namespace Vigenere_cipher
         // Подготовка строки к кодированию:
         private string prepare(string str)
         {
-            string pattern = @"\W";
-            Regex rgx = new Regex(pattern);
+            return new Regex(@"[\W\d]").Replace(str, String.Empty).ToLower();
+        }
 
-            return rgx.Replace(str, String.Empty).ToLower();
+        // Исходное форматирование текста:
+        private string originalFormat(string original, string encoded)
+        {
+            string lowerCase = original.ToLower();
+
+            for (int i = 0; i < original.Length; i++)
+            {
+                if (Vigenere.Alphabet.IndexOf(lowerCase[i]) != -1)
+                {
+                    string newLetter = (lowerCase[i] == original[i]) ? 
+                        encoded[0].ToString() : 
+                        encoded[0].ToString().ToUpper();
+
+                    original = original.Remove(i, 1).Insert(i, newLetter);
+                    encoded = encoded.Remove(0, 1);
+                }
+            }
+
+            return original;
         }
 
         private void encodeButton_Click(object sender, EventArgs e)
@@ -33,7 +44,10 @@ namespace Vigenere_cipher
             string input = prepare(inputTextBox.Text);
             string key = prepare(keyTextBox.Text);
 
-            outputTextBox.Text = Vigenere.Encode(input, key, false);
+            outputTextBox.Text = originalFormat(
+                inputTextBox.Text, 
+                Vigenere.Encode(input, key, false)
+            );
         }
 
         private void decodeButton_Click(object sender, EventArgs e)
@@ -41,7 +55,10 @@ namespace Vigenere_cipher
             string output = prepare(outputTextBox.Text);
             string key = prepare(keyTextBox.Text);
 
-            inputTextBox.Text = Vigenere.Encode(output, key, true);
+            inputTextBox.Text = originalFormat(
+                outputTextBox.Text, 
+                Vigenere.Encode(output, key, true)
+            );
         }
 
         private void keyButton_Click(object sender, EventArgs e)
