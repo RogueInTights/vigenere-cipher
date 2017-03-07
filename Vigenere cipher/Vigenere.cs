@@ -1,4 +1,6 @@
-﻿namespace Vigenere_cipher
+﻿using System.Diagnostics;
+
+namespace Vigenere_cipher
 {
     class Vigenere
     {
@@ -8,6 +10,27 @@
         {
             int position = Alphabet.IndexOf(letter);
             return Alphabet.Remove(0, position) + Alphabet.Remove(position, 0);
+        }
+
+        // Сокращение строки ключа:
+        private static string reduceKey(string key)
+        {
+            for (int i = 1; i < key.Length; i++)
+            {
+                string reducedKey = key.Remove(i);
+                string comparisonString = "";
+
+                while (comparisonString.Length < key.Length)
+                {
+                    comparisonString += reducedKey;
+                }
+                if (comparisonString.Length > key.Length)
+                    comparisonString = comparisonString.Remove(key.Length);
+
+                if (comparisonString == key) return reducedKey;
+            }
+
+            return key;
         }
 
         // Метод кодирования / декодирования:
@@ -34,17 +57,17 @@
         // Метод поиска ключа:
         public static string FindKey(string input, string output)
         {
-            string result = "";
+            string key = "";
 
             for (int i = 0; i < input.Length; i++)
             {
                 string shiftedAlphabet = shift(input[i]);
                 int position = shiftedAlphabet.IndexOf(output[i]);
 
-                result += Alphabet[position];
+                key += Alphabet[position];
             }
 
-            return result;
+            return reduceKey(key);
         }
     }
 }
